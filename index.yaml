@@ -1,0 +1,13 @@
+apiVersion: v1
+entries:
+  deprecation-exporter:
+  - apiVersion: v2
+    created: "2022-02-02T17:18:33.511812336Z"
+    description: Deprecation Exporter
+    digest: 965ae666db1e95cdf1a1e448aaa5c645485b134bc1a78fd95a6625112f5502da
+    name: deprecation-exporter
+    type: application
+    urls:
+    - https://github.com/m-augustine/deprecation-exporter/releases/download/deprecation-exporter-1.0.0/deprecation-exporter-1.0.0.tgz
+    version: 1.0.0
+generated: "2022-02-02T17:18:33.364764886Z"
