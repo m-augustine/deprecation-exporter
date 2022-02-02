@@ -10,6 +10,11 @@ Variables
 `METRICS_IP`    The IP to listen on for the prometheus metrics server. Defaul tis `0.0.0.0`
 
 
+Helm 
+```
+helm repo add m-augustine https://m-augustine.github.io/deprecation-exporter
+helm upgrade --install deprecation-exporter m-augustine/deprecation-exporter
+```
 
 Deploy
     Done through Cloudops CI
