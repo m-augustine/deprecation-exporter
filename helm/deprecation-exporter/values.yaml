@@ -1,0 +1,112 @@
+# Default values for base.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# Override the name of the objects in the release.
+fullnameOverride: {}
+
+replicaCount: 1
+
+image:
+  repository: mmaugust/deprecation-exporter
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "latest"
+
+config: {}
+
+secrets: {}
+
+imagePullSecrets: []
+
+command: []
+args: []
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+    ### Annotation required for the GCP SevericeAccount workload identity binding
+    # iam.gke.io/gcp-service-account: base@<CLUSTER_NAME>.iam.gserviceaccount.com
+
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: {}
+
+# Set the RBAC for the service account
+rbac: 
+  enabled: true
+  cluster: true  # Role or ClusterRole
+  rules: 
+    - apiGroups: [""] 
+      resources: ["pods"]
+      verbs: ["get", "watch", "list"]
+
+podAnnotations: {}
+
+securityContext: {}
+  # fsGroup: 2000
+podSecurityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  ports:
+    app:
+      port: 8443
+      containerPort: 8443
+      protocol: TCP
+    metrics:
+      port: 9092
+      containerPort: 9092
+      protocol: TCP
+
+metrics:
+  enabled: true
+  interval: 30s
+
+resources: {}
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+# livenessProbe:
+  # httpGet:
+  #   path: /
+  #   port: http
+
+# readinessProbe:
+  # httpGet:
+  #   path: /
+  #   port: http
+
+nodeSelector: {}
+  # label: value
+
+tolerations: []
+
+affinity: {}
+
+additionalVolumes: {}
+  ### Add an empty directory that is shared across all containers in the pod
+  # - name: additional-volume
+  #   mountPath: /additionalvolume
+  #   readOnly: false
+  #   volume:
+  #     emptyDir: {}
+  # ### Add a Secret mounted as a volume
+  # - name: additional-volume
+  #   mountPath: /additionalvolume
+  #   readOnly: false
+  #   volume:
+  #     secret:
+  #       secretName: secret-name

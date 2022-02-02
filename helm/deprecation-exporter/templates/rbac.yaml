@@ -1,0 +1,57 @@
+{{- if .Values.rbac.enabled -}}
+
+{{- if .Values.rbac.cluster -}}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "app.fullname" . }}
+{{- with .Values.rbac.rules }}
+rules:
+  {{- toYaml . | nindent 2 }}
+{{- end }}
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ include "app.fullname" . }}
+subjects:
+- kind: ServiceAccount
+  name: {{ include "app.serviceAccountName" . }}
+  namespace: {{ .Release.Namespace }}
+roleRef: 
+  kind: ClusterRole
+  name:  {{ include "app.fullname" . }}
+  apiGroup: rbac.authorization.k8s.io
+
+## If not cluster.enabled
+{{- else }}
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "app.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+{{- with .Values.rbac.rules }}
+rules:
+  {{- toYaml . | nindent 2 }}
+{{- end }}
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "app.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+subjects:
+- kind: ServiceAccount
+  name: {{ include "app.serviceAccountName" . }}
+  namespace: {{ .Release.Namespace }}
+roleRef: 
+  kind: Role
+  name:  {{ include "app.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  apiGroup: rbac.authorization.k8s.io
+{{- end }}
+
+{{- end }}
