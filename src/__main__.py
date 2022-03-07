@@ -8,8 +8,8 @@ import time
 
 
 
-def kubent(helm2, helm3, cluster):
-    cmd = ['kubent', '-o', 'json', '--helm2={}'.format(str(helm2)), '--helm3={}'.format(str(helm3)), '--cluster={}'.format(str(cluster))]
+def kubent(helm2, helm3, cluster, targetVersion):
+    cmd = ['kubent', '-o', 'json', '--helm2={}'.format(str(helm2)), '--helm3={}'.format(str(helm3)), '--cluster={}'.format(str(cluster)), '--target-version={}'.format(targetVersion)]
 
     result = subprocess.run(cmd, stdout=subprocess.PIPE)
     result = json.loads(result.stdout)
@@ -18,6 +18,7 @@ def kubent(helm2, helm3, cluster):
 
 if __name__ == "__main__":
     sleepTime = os.getenv('DEPRECATION_CHECK_WAIT_TIME', "604800")
+    targetVersion = os.getenv('TARGET_KUBERNETES_VERSION', "1.20.11")
     metricsPort = os.getenv('METRICS_PORT', "9092")
     metricsListenAddres = os.getenv('METRICS_IP', "0.0.0.0")
 
@@ -31,7 +32,8 @@ if __name__ == "__main__":
     )
 
     while True:
-        for warning in kubent(True, False, False):
+        # Look for HELM v2 resources only 
+        for warning in kubent(True, False, False, targetVersion):
             value=(warning['RuleSet']).split()[-1]
             
             
@@ -46,8 +48,8 @@ if __name__ == "__main__":
             
             ).set(value)
 
-
-        for warning in kubent(False, True, False):
+        # Look for HELM v3 resources only 
+        for warning in kubent(False, True, False, targetVersion):
             value=(warning['RuleSet']).split()[-1]
             
             
@@ -62,7 +64,8 @@ if __name__ == "__main__":
             
             ).set(value)
 
-        for warning in kubent(False, False, True):
+        # Look for Cluster resources only 
+        for warning in kubent(False, False, True, targetVersion):
             value=(warning['RuleSet']).split()[-1]
             
             
