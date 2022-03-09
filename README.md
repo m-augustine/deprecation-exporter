@@ -8,6 +8,7 @@ Variables
 `DEPRECATION_CHECK_WAIT_TIME`  The time, in seconds, between each scan. Default is `3600` (1 hour)
 `METRICS_PORT`  The port that prometheus metrics server listens on. Default is `9092`
 `METRICS_IP`    The IP to listen on for the prometheus metrics server. Defaul tis `0.0.0.0`
+`TARGET_KUBERNETES_VERSION`     The target kubernetes version to scan against
 
 
 Helm 
