@@ -32,6 +32,9 @@ if __name__ == "__main__":
     )
 
     while True:
+        # Clear out any old metrics from the last run
+        gauge._metrics.clear()
+        
         # Look for HELM v2 resources only 
         for warning in kubent(True, False, False, targetVersion):
             value=(warning['RuleSet']).split()[-1]
